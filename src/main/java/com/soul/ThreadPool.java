@@ -5,9 +5,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadPool {
 
-    private int coreSize;
-    private long keepAliveTime;
-    private TimeUnit timeUnit;
+    private int coreSize;//核心线程数
+    private long keepAliveTime;//最大超时时间
+    private TimeUnit timeUnit;//时间单位
     private RejectPolicy rejectPolicy;
 
     private MyBlockQueue<Runnable> taskQueue;
@@ -26,12 +26,11 @@ public class ThreadPool {
 
     public void execute(Runnable task) {
         //任务数没有超过 coreSize 时，交给Worker对象执行
-        //任务数超过 coreSize 时，进入阻塞队列
         if (workers.size() <= coreSize) {
             Worker worker = new Worker(task);
             workers.add(worker);
             worker.start();
-        } else {
+        } else {//任务数超过 coreSize 时，进入阻塞队列
             taskQueue.tryPut(rejectPolicy, task);
         }
 

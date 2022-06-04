@@ -72,9 +72,9 @@ public class MyBlockQueue<T> {
      *
      * @return
      */
-    public T poll(long timeout, TimeUnit timeUnit) {
+    public T poll(long keepAliveTime, TimeUnit timeUnit) {
         lock.lock();
-        long nanos = timeUnit.toNanos(timeout);
+        long nanos = timeUnit.toNanos(keepAliveTime);
         try {
             while (queue.isEmpty()) {
                 try {
